@@ -1,31 +1,43 @@
 #Renaming and Moving SQL DB Files
 
-$dbname = "Sales_DW"
+$dbname="Sales_DW"
 $ext = ".bak"
+$srcFileName = $dbname + $ext
 $base_dir="D:\Backup\SQLServer\SalesDW\"
+$logfile = $base_dir + $dbname + "log.txt"
 $archiveFolder = $base_dir + "Archive\"
-$sourceFileName =   $dbname + $ext
-$newFileName = $base_dir + $dbname + "_" + (Get-Date -Format "yyyy-MM-ddhhmmss" ) + $ext
+$newFileName = $dbname + "_" + (Get-Date -Format "yyyy-MM-ddhhmmss" ) + $ext
+
+Set-Location $base_dir
 
 $Now = Get-Date
 $Days = "1"
 $LastWrite = $Now.AddDays(-$Days)
 
-echo $sourceFileName
-echo $newFileName
-
-Function RenameMoveFile ( $fileName )
+Function RenameCopyFile
 {
-    $date = Get-Date -uFormat "%Y%m%d"
+    [CmdletBinding()] 
+    Param ( [Parameter(Mandatory=$true)][String]$fileName ) 
  
-    write- host "Renaming File $sourceFileName " -ForegroundColor "Blue"
-    Rename-Item $fileName $newFileName
-  
-    write- host "Moving File to $archiveFolder " -ForegroundColor "Magenta"
-    Move-Item $newFileName $archiveFolder
+    #Test the local file exists or not 
+    If (-Not (Test-Path $fileName)) 
+    { 
+        Write-Output "$fileName does not exists!" | Out-File $logfile -Append;   
+    } 
+    else
+    { 
+        $date = Get-Date -uFormat "%Y%m%d"
+    
+        Write-Output "Copying File to $archiveFolder" | Out-File $logfile -Append;
+        Copy-Item $fileName $archiveFolder
+
+        #Setting location to Archive Folder
+        Set-Location $archiveFolder
+
+        Write-Output "Renaming File $srcFileName to $newFileName" | Out-File $logfile -Append;  
+        Rename-Item $fileName $newFileName 
+    }
 }
-
-
 #######get files based on lastwrite filter and specified folder ######
 Function DeleteFiles
 {
@@ -43,5 +55,11 @@ Function DeleteFiles
     }
 }
 
-RenameMoveFile -fileName $sourceFileName
+#Rename Current Database Backup file
+RenameCopyFile -fileName $srcFileName
+
+$Days = "3"
+$LastWrite = $Now.AddDays(-$Days)
+
+#Delete Files older than above specified $Days
 DeleteFiles
