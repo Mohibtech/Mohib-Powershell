@@ -6,18 +6,18 @@ $srcFileName = $dbname + $ext
 $base_dir="D:\Backup\SQLServer\SalesDW\"
 $logfile = $base_dir + $dbname + "log.txt"
 $archiveFolder = $base_dir + "Archive\"
-$newFileName = $dbname + "_" + (Get-Date -Format "yyyy-MM-ddhhmmss" ) + $ext
+dtformat = (Get-Date -Format "ddMMyy_hhmm" )
+$newFileName = $dbname + "_" + dtformat + $ext
 
 Set-Location $base_dir
 
-$Now = Get-Date
-$Days = "1"
-$LastWrite = $Now.AddDays(-$Days)
+
 
 Function RenameCopyFile
 {
     [CmdletBinding()] 
-    Param ( [Parameter(Mandatory=$true)][String]$fileName ) 
+    Param ( [Parameter(Mandatory=$true)]
+            [String]$fileName ) 
  
     #Test the local file exists or not 
     If (-Not (Test-Path $fileName)) 
@@ -58,6 +58,7 @@ Function DeleteFiles
 #Rename Current Database Backup file
 RenameCopyFile -fileName $srcFileName
 
+#Setting days to removing files older than LastWrite variable
 $Days = "3"
 $LastWrite = $Now.AddDays(-$Days)
 
