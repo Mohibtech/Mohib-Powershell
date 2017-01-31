@@ -11,8 +11,6 @@ $newFileName = $dbname + "_" + dtformat + $ext
 
 Set-Location $base_dir
 
-
-
 Function RenameCopyFile
 {
     [CmdletBinding()] 
