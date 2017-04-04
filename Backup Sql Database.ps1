@@ -1,6 +1,5 @@
-Set-ExecutionPolicy RemoteSigned
-
-import-module sqlps
+#Set-ExecutionPolicy RemoteSigned
+#import-module sqlps
 
 $dt = Get-Date -Format yyyyMMdd
 $ext = '.bak'
