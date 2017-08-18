@@ -7,11 +7,8 @@ $logon = “$username/$password@$tns”
 $outputfile = "Table_loading.log" 
 
 function Invoke-SqlPlus($sqlcmd, $text) {
-
-    Write-Output "Starting Execution of command "  $text | Out-File -Append $outputfile 
-    
+    Write-Output "Starting Execution of command "  $text | Out-File -Append $outputfile    
     $sqlcmd | sqlplus -S $logon | Out-File -Append $outputfile ;
-    
     Write-Output "############################################## `n" | Out-File -Append $outputfile 
 
     if (!$? -or # Stop on non-zero exit codes.
@@ -29,13 +26,9 @@ function Invoke-SqlPlus($sqlcmd, $text) {
 }
 
 function Invoke-Sqlldr($ctl, $logfile) {
-		
     Write-Output "Loading table using $ctl control file" | Out-File -Append $outputfile 
-
     sqlldr userid=$username/$password control=$ctl log=$logfile | Out-File -Append $outputfile 
-   
     Write-Output "################################################################### `n" | Out-File -Append $outputfile 
-
 }
 
 $sqlDC = @"
@@ -50,9 +43,7 @@ $sqlZN = @"
 
 ############## Truncating TEMP Tables ############################
 Invoke-SqlPlus $sqlDC "truncate table DC_EXT_TEMP;"
-
 Invoke-SqlPlus $sqlZN "truncate table ZN_EXT_TEMP;"
-
 
 ############ Loading of TEMP tables using sqlldr utility
 Write-Output "############# Loading of TEMP tables starting ############################ `n" | Out-File -Append $outputfile 
