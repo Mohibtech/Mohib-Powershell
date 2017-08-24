@@ -1,0 +1,25 @@
+####### Delete files based on lastwrite filter and specified folder ######
+
+Function DeleteFiles($Days)
+{
+    $Now = Get-Date
+    $base_dir="D:\Backup\PS\SQLServer_PS\"
+    $LastWrite = $Now.AddDays(-$Days)
+       
+    $FilesToDelete = Get-Childitem $base_dir -Include "*.txt" -Recurse |
+               Where {$_.LastWriteTime -le "$LastWrite" }
+  
+    foreach ($FileToDel in $FilesToDelete)
+    {
+    
+        if ($FileToDel -ne $NULL)  {
+            write-host "Deleting File $FileToDel" -ForegroundColor "DarkRed"
+            Remove-Item $FileToDel.FullName | Out-Null
+           }
+        else
+           { Write-Host "No more files to delete!"  -ForegroundColor "Green"   }
+    }
+}
+
+#Delete Files older than above specified $Days
+DeleteFiles -Days 3
