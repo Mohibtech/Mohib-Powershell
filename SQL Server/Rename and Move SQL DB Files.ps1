@@ -2,16 +2,15 @@
 
 $dbname="Sales_DW"
 $ext = ".bak"
-$srcFileName = $dbname + $ext
-$base_dir="D:\Backup\SQLServer\SalesDW\"
-$logfile = $base_dir + $dbname + "log.txt"
+$base_dir="E:\BACKUPS\Metadata_Backup\"
+$logfile = $base_dir + $dbname + ".log"
 $archiveFolder = $base_dir + "Archive\"
-dtformat = (Get-Date -Format "ddMMyy_hhmm" )
-$newFileName = $dbname + "_" + dtformat + $ext
+$srcFileName =   $dbname + $ext
+$newFileName = $dbname + "_" + (Get-Date -Format "ddMMMyyyy_hhmm" ) + $ext
 
 Set-Location $base_dir
 
-Function RenameCopyFile
+Function CopyRenameFile
 {
     [CmdletBinding()] 
     Param ( [Parameter(Mandatory=$true)]
@@ -23,9 +22,7 @@ Function RenameCopyFile
         Write-Output "$fileName does not exists!" | Out-File $logfile -Append;   
     } 
     else
-    { 
-        $date = Get-Date -uFormat "%Y%m%d"
-    
+    {    
         Write-Output "Copying File to $archiveFolder" | Out-File $logfile -Append;
         Copy-Item $fileName $archiveFolder
 
@@ -36,7 +33,8 @@ Function RenameCopyFile
         Rename-Item $fileName $newFileName 
     }
 }
-#######get files based on lastwrite filter and specified folder ######
+
+####### Get files based on lastwrite filter and specified folder ######
 Function DeleteFiles
 {
 
@@ -46,15 +44,16 @@ Function DeleteFiles
     foreach ($FileToDel in $FilesToDelete)
     {
         if ($FileToDel -ne $NULL)  {
-            write-host "Deleting File $FileToDel" -ForegroundColor "DarkRed"
-            Remove-Item $FileToDel .FullName | out-null          }
+            write-host "Deleting File $FileToDel" | Out-File $logfile -Append;
+            Remove-Item $FileToDel.FullName | | Out-File $logfile -Append;
+        }
         else
-              { Write-Host "No more files to delete!" -ForegroundColor "Green"   }
+           { Write-Host "No more files to delete!" | Out-File $logfile -Append;   }
     }
 }
 
 #Rename Current Database Backup file
-RenameCopyFile -fileName $srcFileName
+CopyRenameFile -fileName $srcFileName
 
 #Setting days to removing files older than LastWrite variable
 $Days = "3"
