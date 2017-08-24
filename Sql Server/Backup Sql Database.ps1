@@ -2,14 +2,12 @@
 #import-module sqlps
 
 $dt = Get-Date -Format yyyyMMdd
-$ext = '.bak'
-$dbname = 'Sales_DW'
-$srvr = 'GT030\SQLEXPRESS'
-$baseDir='D:\Backup\SQLServer\SalesDW\'
-$backupDest = $baseDir +  $dbname + $ext
+$dbname = "Metadata"
+$srvr = "gt02"
+$backupDest = "E:\BACKUPS\Metadata_Backup\" + $dbname + ".bak"
 
-$backupQuery = "BACKUP DATABASE $dbname TO DISK=N'$backupDest' WITH INIT"
+Backup-SqlDatabase -ServerInstance $srvr -Database $dbname -BackupFile $backupDest -Initialize
 
-Backup-SqlDatabase -ServerInstance $srvr  -Database $dbname -BackupFile $backupDest
+Invoke-Expression E:\BACKUPS\Metadata_Backup\PS_ARCHIVE.ps1
 
-#Invoke-Sqlcmd  -Query $backupQuery ;
+
