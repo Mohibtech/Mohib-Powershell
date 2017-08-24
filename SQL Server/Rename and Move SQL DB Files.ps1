@@ -35,9 +35,11 @@ Function CopyRenameFile
 }
 
 ####### Get files based on lastwrite filter and specified folder ######
-Function DeleteFiles
+Function DeleteFiles($Days)
 {
-
+    $Now = Get-Date
+    $LastWrite = $Now.AddDays(-$Days)
+    
     $FilesToDelete = Get-Childitem $base_dir -Include "*.bak" -Recurse |
                Where {$_ .LastWriteTime - le "$LastWrite" }
    
@@ -55,9 +57,5 @@ Function DeleteFiles
 #Rename Current Database Backup file
 CopyRenameFile -fileName $srcFileName
 
-#Setting days to removing files older than LastWrite variable
-$Days = "3"
-$LastWrite = $Now.AddDays(-$Days)
-
 #Delete Files older than above specified $Days
-DeleteFiles
+DeleteFiles -Days 3 
