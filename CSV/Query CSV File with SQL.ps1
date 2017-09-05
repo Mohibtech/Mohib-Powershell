@@ -11,6 +11,14 @@ Invoke-WebRequest http://git.io/vvzxA | Set-Content -Path $csv
 
 $firstRowColumnNames = "Yes"
 $delimiter = ","
+
+# If delimiter is other than comma then use schema.ini 
+if ($delimiter -ne ",") {
+   $filename = Split-Path $csv –leaf
+   Set-Content -Path schema.ini -Value "[$filename]"
+   Add-Content -Path schema.ini -Value "Format=Delimited($delimiter)"
+}
+
 $tablename = (Split-Path $csv -leaf).Replace(".","#")
 
 $sql = "SELECT TOP 20 SUM(playcount) AS playcount, artist from [$tablename] 
