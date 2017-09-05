@@ -1,0 +1,14 @@
+$Schedule = New-Object -ComObject "Schedule.Service"
+$Schedule.Connect('localhost')
+$Folder = $Schedule.GetFolder('\')
+$Folder.GetTasks(1) | Select Name,Path,@{
+    Name = 'State'
+    Expression = {switch ($_.State) {
+            0 {'Unknown'}
+            1 {'Disabled'}
+            2 {'Queued'}
+            3 {'Ready'}
+            4 {'Running'}
+        }
+    }
+}
