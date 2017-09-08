@@ -76,10 +76,11 @@ $srvrs = Import-Csv -Path "D:\Backup\Oracle\servers.txt"
 
 $queryfiles = Get-ChildItem "D:\Backup\Oracle\qry_DG*.txt"
 
+$AccumResults=@()
 foreach ($qfile in $queryfiles){
     write-host "################ $qfile ##################"
     $sqlquery = (Get-Content $qfile -Raw)
     $sqlquery
-    $res = ResultSet -servers $srvrs -sqlquery $sqlquery -Verbose
-    $res | Export-CSV "D:\Backup\Oracle\PartitionCounts.csv" -NoTypeInformation   
+    $AccumResults += ResultSet -servers $srvrs -sqlquery $sqlquery -Verbose
+    $AccumResults | Export-CSV "D:\Backup\Oracle\PartitionCounts.csv" -NoTypeInformation   
 } 
