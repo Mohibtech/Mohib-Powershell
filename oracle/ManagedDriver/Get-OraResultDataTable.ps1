@@ -1,3 +1,5 @@
+# Credit to Rob Simmers 
+# Based on link [https://powershell.org/forums/topic/ps-script-to-get-data-from-oracle-db-and-export-to-csv/]
 function Get-OraResultDataTable{
     [CmdLetBinding()]
     param(
