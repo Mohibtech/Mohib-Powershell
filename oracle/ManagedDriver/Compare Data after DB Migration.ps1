@@ -74,7 +74,7 @@ function ResultSet{
 # localhost, orcl,   system, passwd
 $srvrs = Import-Csv -Path "D:\Backup\Oracle\servers.txt"
 
-$queryfiles = Get-ChildItem "D:\Backup\Oracle\GameStop\qry_DG*.txt"
+$queryfiles = Get-ChildItem "D:\Backup\Oracle\qry_DG*.txt"
 
 foreach ($qfile in $queryfiles){
     write-host "################ $qfile ##################"
