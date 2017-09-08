@@ -3,14 +3,12 @@
 function Get-OraResultDataTable{
     [CmdLetBinding()]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true)] 
         [string]$conString,
         [Parameter(Mandatory=$true)]
         [string]$sqlString
     )
-    begin {
-        $resultSet=@()
-    }
+    begin {  $resultSet=@() }
     process {
         try{
             Write-Verbose ("Connection String: {0}" -f $conString)
@@ -30,16 +28,11 @@ function Get-OraResultDataTable{
         catch{
             Write-Error($_.Exception.ToString())
         }
-        finally{
-            if($con.State-eq'Open'){ 
-                $con.close() 
-             }
+        finally{ 
+            if($con.State-eq'Open'){ $con.close() }
         }
     }
-    end {
-        $resultSet
-    }
-
+    end {  $resultSet  }
 }
 
 function ResultSet{
@@ -71,30 +64,22 @@ function ResultSet{
                                  
                 }
         }
-        catch{
-            Write-Error($_.Exception.ToString())
-        }
+        catch{ Write-Error($_.Exception.ToString())  }
     }
-    end {
-        $results
-    }
-
+    end {         $results    }
 }
 
 # Servers.txt file format as follows
 # Name,     Service, User,   Password
 # localhost, orcl,   system, passwd
-     
-$srvrs = Import-Csv -Path "D:\Backup\Oracle\GameStop\servers_GameStop.txt"
+$srvrs = Import-Csv -Path "D:\Backup\Oracle\servers.txt"
 
 $queryfiles = Get-ChildItem "D:\Backup\Oracle\GameStop\qry_DG*.txt"
 
-foreach ($qfile in $queryfiles)
-{
+foreach ($qfile in $queryfiles){
     write-host "################ $qfile ##################"
     $sqlquery = (Get-Content $qfile -Raw)
     $sqlquery
     $res = ResultSet -servers $srvrs -sqlquery $sqlquery -Verbose
-    $res | Export-CSV "D:\Backup\Oracle\GameStop\PartitionCounts.csv" -NoTypeInformation   
-
+    $res | Export-CSV "D:\Backup\Oracle\PartitionCounts.csv" -NoTypeInformation   
 } 
