@@ -42,15 +42,13 @@ function Get-OraResultDataTable{
     end {
         $resultSet
     }
-
 }
 
-
-$srvrname = "192.168.10.227"
+$srvrname = "gt01"
 $service = "orcl"
 $datasource = $srvrname + '/' + $service
 $username = "system"
-$passwd = "Aa123456"
+$passwd = "passwd"
     
 $connStr="User Id=$username;Password=$passwd;Data Source=$datasource"
 
@@ -64,8 +62,6 @@ from dba_tab_partitions
 where table_owner = '$owner'
 and table_name = '$table_name'
 "@
-# Product Result like (select count(1) from CCYV4.CCYV4_DG0 partition( PT_CCYV4_DG0_20160101 )) PT_20160101
-
 
 $PartitionCount = "select count(1) PartCount from dba_tab_partitions where table_owner='$owner' and table_name='$table_name' "
 
@@ -76,7 +72,7 @@ $results = Get-OraResultDataTable -conString $connStr -sqlString $queryPartition
 $finalQry = "select "
 foreach($res in $results){
     write-host "Partition Query=> " $res[0]
-    $finalQry += "(" + $res[0] + "), `n"
+    $finalQry += $res[0] + ", `n"
 }
 
 $finalQry += "(" + $PartitionCount + ") PT_Count `n from dual"
