@@ -45,16 +45,15 @@ function Get-OraResultDataTable{
 }
 
 $srvrname = "gt01"
-$service = "orcl"
+$service = "ora"
 $datasource = $srvrname + '/' + $service
 $username = "system"
 $passwd = "passwd"
     
 $connStr="User Id=$username;Password=$passwd;Data Source=$datasource"
 
-
-$owner = "CCYV4"
-$table_name = "CCYV4_DG0"
+$owner = "system"
+$table_name = "data"
 
 $queryPartition=@"
 select '(select count(1) from CCYV4.' || table_name || ' partition( ' || partition_name || ' )) PT_'|| substr(partition_name,-8) 
