@@ -59,11 +59,13 @@ $owner = "CCYV4"
 $table_name = "CCYV4_DG0"
 
 $queryPartition=@"
-select 'select count(1) from CCYV4.' || table_name || ' partition( ' || partition_name || ' )' 
+select '(select count(1) from CCYV4.' || table_name || ' partition( ' || partition_name || ' )) PT_'|| substr(partition_name,-8) 
 from dba_tab_partitions
 where table_owner = '$owner'
 and table_name = '$table_name'
 "@
+# Product Result like (select count(1) from CCYV4.CCYV4_DG0 partition( PT_CCYV4_DG0_20160101 )) PT_20160101
+
 
 $PartitionCount = "select count(1) PartCount from dba_tab_partitions where table_owner='$owner' and table_name='$table_name' "
 
@@ -77,7 +79,8 @@ foreach($res in $results){
     $finalQry += "(" + $res[0] + "), `n"
 }
 
-$finalQry += "(" + $PartitionCount + " ) `n from dual"
+$finalQry += "(" + $PartitionCount + ") PT_Count `n from dual"
 
 
 $results = Get-OraResultDataTable -conString $connStr -sqlString $finalQry -Verbose 
+$results | select *
