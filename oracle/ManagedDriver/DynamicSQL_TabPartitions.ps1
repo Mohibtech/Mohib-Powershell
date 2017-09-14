@@ -56,7 +56,7 @@ $owner = "system"
 $table_name = "data"
 
 $queryPartition=@"
-select '(select count(1) from CCYV4.' || table_name || ' partition( ' || partition_name || ' )) PT_'|| substr(partition_name,-8) 
+select '(select count(1) from $owner.' || table_name || ' partition( ' || partition_name || ' )) PT_'|| substr(partition_name,-8) 
 from dba_tab_partitions
 where table_owner = '$owner'
 and table_name = '$table_name'
