@@ -7,7 +7,7 @@ function copyCSVFiles {
     param()
 
     $srcPath = 'D:\Backup\Oracle\'
-    $destPath = 'D:\Backup\PS\Oracle_PS\TKMX\'
+    $destPath = 'D:\Backup\PS\Oracle_PS\KMX\'
 
     $src_script = $srcPath + 'script_01.sql'
     $src_Metadata = $srcPath +"FULLDB_METADATA.DMP"
