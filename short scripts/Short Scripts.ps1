@@ -1,6 +1,6 @@
 # Multiple Short scripts
 
-
+# Getting List of Processes (Programs) using 20 MB or more
 Get-Process | Where-Object { $_.WS -ge 20MB }
 
 
