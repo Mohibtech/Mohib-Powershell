@@ -8,6 +8,9 @@ Get-Process | Where-Object { $_.WS -ge 20MB }
 Get-Process notepad | Tee-Object -variable victims | Stop-Process
 $victims | select ProcessName,HasExited
 
+# Stopping Process IDMIntegrator
+Get-Process | Where { $_.ProcessName -like "idm*" } | Stop-Process
+
 # Group Object by Status
 Get-Service | Group-Object Status
 
