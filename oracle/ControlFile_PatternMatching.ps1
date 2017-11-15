@@ -2,9 +2,9 @@ $username = "sys"
 $password = "farooq"
 $tns = "orcl"
 $logon = “$username/$password as sysdba”
-$new_ctl = "C:\ORA_REDO\CONTROL04.CTL"
+$new_ctl = "C:\ORA_REDO\CONTROL05.CTL"
 
-
+# Construct Query using control file names in array $ctlfiles
 function qryConstruct($ctlfiles){
     $finalQry = "alter system set control_files = "
 
@@ -18,23 +18,22 @@ function qryConstruct($ctlfiles){
 }
 
 function Invoke-SqlPlus ($sqlcmd) {  
-    Write-Host "Starting Execution of $sqlcmd "
+    Write-Host "Starting Execution of `n $sqlcmd "
     $sqlcmd | sqlplus -S $logon; 
 }
-
-
 
 $cfiles = Invoke-SqlPlus "SELECT name FROM V`$CONTROLFILE;"
 #$qryResult
 
-$cfiles
-Write-Host " Counting the length of control files " $cfiles.count
+#$cfiles
+Write-Host " Counting the length of control files `n" $cfiles.count
 
-# Matching only Control Files starting with D: (on drive D:\)
-$ctlfiles = $cfiles | where { $_ -match "D:*" } 
+# Matching Strings starting with C-Z followed by a colon (represents a drive Letter)
+$ctlfiles = $cfiles | where { $_ -match "^([C-Z])+:.*" } 
 
-$ctlfile_num = $ctlfiles.Length
+Write-Host "Length of control files after pattern matching `n" $ctlfiles.Length
 $ctlfiles[0]
+
 
 $sqlAddCTLFile = qryConstruct($ctlfiles)
 
