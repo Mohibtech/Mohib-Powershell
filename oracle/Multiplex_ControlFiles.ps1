@@ -18,20 +18,25 @@ function qryConstruct($ctlfiles){
 }
 
 function Invoke-SqlPlus ($sqlcmd) {  
-    Write-Host "Starting Execution of $sqlcmd "
+    Write-Host "Starting Execution of `n $sqlcmd" -ForegroundColor Yellow
     $sqlcmd | sqlplus -S $logon; 
 }
 
 # Backup Control File and spfile as pfile
-$spfileBKP = $bkpDir + "pfile.ora_bkp"
-$ctlBKP = $bkpDir + "ctl_trace.log"
+function Backup_CtlSPFILE(){
+    # Backup Control File and spfile as pfile
+    $spfileBKP = $bkpDir + "pfile.ora_bkp"
+    $ctlBKP = $bkpDir + "ctl_trace.log"
 
-$bkpCTLnSPFILE = @"
-       alter database backup controlfile to trace as '$ctlBKP' reuse ;
-       create pfile='$spfileBKP' from spfile;
+    $bkpCTLnSPFILE = @"
+           alter database backup controlfile to trace as '$ctlBKP' reuse ;
+           create pfile='$spfileBKP' from spfile;
 "@
 
-Invoke-SqlPlus $bkpCTLnSPFILE
+    Invoke-SqlPlus $bkpCTLnSPFILE
+}
+
+Backup_CtlSPFILE
 
 # Get Control file names from 
 $cfiles = Invoke-SqlPlus "SELECT name FROM V`$CONTROLFILE;"
