@@ -14,11 +14,11 @@ show parameter control_files
 #>
 
 $username = "sys"
-$password = "farooq"
+$password = "sys"
 $tns = "orcl"
 $logon = “$username/$password as sysdba”
 $bkpDir = "C:\ORA_REDO\"
-$new_ctl = "C:\ORA_REDO\CONTROL01.CTL"
+$new_ctl = "C:\ORA_REDO\CONTROL02.CTL"
 $logsql = "C:\ORA_REDO\logsqlcmd.txt"
 
 function Invoke-SqlPlus ($sqlcmd) {  
