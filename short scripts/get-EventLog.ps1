@@ -45,3 +45,9 @@ Get-EventLog -Log "System"  -After "09/28/2015" -Before "09/29/2015" -EntryType 
 Get-EventLog -Log "System"  -After "09/28/2015" -Before "09/29/2015" | 
 Where {$_.EntryType -like 'Error' -or $_.EntryType -like 'Warning'}
 
+# Select-Object cmdlet may be used to select specific event properties, and rename them as desired.
+$events = Get-WinEvent -FilterHashTable @{LogName='System'; Level=2; StartTime=(Get-Date).AddDays(-30)}
+$events | Select @{Name='Time';Expression={$_.'TimeCreated'}},
+    @{Name="Source";Expression={$_.'ProviderName'}},
+    @{Name="Event";Expression={$_.'Id'}}
+
