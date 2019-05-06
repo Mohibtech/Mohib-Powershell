@@ -1,3 +1,5 @@
+# Thanks to http://microsoft-ssis.blogspot.com/2016/04/get-packages-from-ssis-catalog.html
+
 #PowerShell: DownloadIspac.ps1
 ################################
 ########## PARAMETERS ##########
